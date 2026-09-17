@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Estudo - Rick Sax</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0b0e;
+            color: #dcdcdc;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            user-select: none; /* Dificulta a seleção e cópia de texto */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .container {
+            background: #141418;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            border: 1px solid #2a2212;
+        }
+        h1 { 
+            color: #f1c40f; 
+            margin-bottom: 5px; 
+            font-size: 28px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .autor { color: #888; font-size: 13px; margin-bottom: 25px; }
+        
+        .tela { display: none; }
+        .tela.ativa { display: block; }
+
+        .menu-inicial-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .btn-grande {
+            background-color: #c29b38;
+            color: #121215;
+            border: none;
+            padding: 18px 30px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            width: 100%;
+            max-width: 350px;
+        }
+        .btn-grande:hover { background-color: #f1c40f; transform: translateY(-2px); }
+
+        .btn-voltar {
+            background-color: #2c2c35;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            float: left;
+            font-weight: bold;
+        }
+        .btn-voltar:hover { background-color: #3d3d4a; border-color: #c29b38; }
+
+        .seletor-escalas-box {
+            background: #1a1a20;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-escala {
+            background-color: #222228;
+            color: #aaa;
+            border: 1px solid #444;
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-escala:hover { background-color: #33333d; color: #fff; }
+        .btn-escala.ativo { background-color: #c29b38; color: #121215; border-color: #f1c40f; }
+
+        .bloco-pratica {
+            background: #1a1a20;
+            border: 2px solid #c29b38;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            clear: both;
+        }
+
+        .aviso-metronomo {
+            background: rgba(194, 155, 56, 0.15);
+            border: 1px solid #c29b38;
+            color: #f1c40f;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .aviso-oitava-ex13 {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+            color: #ff6b6b;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .exercicio-completo-box {
+            background: #0d0d11;
+            border: 2px dashed #c29b38;
+            padding: 25px;
+            font-size: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #f39c12;
+            letter-spacing: 1px;
+            word-break: break-word;
+            line-height: 1.8;
+        }
+
+        .nome-exercicio {
+            font-size: 22px;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contador-ex {
+            font-size: 14px;
+            color: #b8860b;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .controles-pratica {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-acao {
+            background-color: #2c2c35;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 12px 22px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-acao:hover { background-color: #3d3d4a; border-color: #c29b38; }
+        
+        .btn-proximo {
+            background-color: #c29b38;
+            color: #121215;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-proximo:hover { background-color: #f1c40f; transform: translateY(-1px); }
+
+        .lista-rapida {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin: 15px 0;
+            max-height: 140px;
+            overflow-y: auto;
+            background: #111115;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #222;
+        }
+        .btn-mini {
+            background: #222228;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .btn-mini:hover { background: #33333d; }
+        .btn-mini.ativo { background: #c29b38; color: #121215; font-weight: bold; border-color: #f1c40f; }
+
+        .duvidas-box {
+            background: #1a1a20;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        .duvidas-box h3 { color: #f1c40f; margin-top: 0; font-size: 16px; }
+        .info-duvida {
+            font-size: 13px;
+            color: #bbb;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .info-duvida a { color: #f1c40f; text-decoration: none; font-weight: bold; }
+
+        .suporte-info {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #888;
+            border-top: 1px solid #2a2a2a;
+            padding-top: 15px;
+        }
+        .suporte-info a { color: #f1c40f; text-decoration: none; font-weight: bold; }
+
+        .versao-rodape {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🎷 Laboratório de Estudo</h1>
+        <div class="autor">Desenvolvido por: <strong>Rick Sax</strong></div>
+
+        <!-- TELA INICIAL -->
+        <div id="tela-inicial" class="tela ativa">
+            <div style="font-size: 16px; margin: 20px 0; color: #aaa;">
+                Bem-vindo ao seu estúdio de alta performance no saxofone.<br>Escolha abaixo o módulo desejado:
+            </div>
+
+            <div class="menu-inicial-box">
+                <button class="btn-grande" onclick="mudarTela('tela-escalas-maiores')">🎵 Escalas Maiores</button>
+                <button class="btn-grande" onclick="mudarTela('tela-musicas')">🎶 Músicas (Repertório)</button>
+            </div>
+
+            <div class="suporte-info">
+                Suporte técnico: <a href="mailto:spamricksax@gmail.com">spamricksax@gmail.com</a>
+            </div>
+            <div class="versao-rodape">Versão 0012026</div>
+        </div>
+
+        <!-- TELA DE ESCALAS MAIORES -->
+        <div id="tela-escalas-maiores" class="tela">
+            <button class="btn-voltar" onclick="mudarTela('tela-inicial')">⬅ Voltar ao Início</button>
+            <div style="clear: both;"></div>
+
+            <div class="seletor-escalas-box" id="menu-tons-escalas"></div>
+
+            <div style="font-size: 15px; margin: 10px 0 15px 0; color: #aaa;">
+                Tonalidade Ativa: <strong id="nome-tom-ativo-escala" style="color: #f1c40f;">Dó Maior (C)</strong>
+            </div>
+
+            <div class="aviso-metronomo">
+                ⏱️ <strong>Regra de Estudo:</strong> Use o metrônomo em <strong>60 BPM</strong>. Aumente de 5 em 5 até atingir <strong>120 BPM</strong> com total limpeza e precisão antes de passar para o próximo exercício!
+            </div>
+
+            <div class="lista-rapida" id="menu-mini-exercicios"></div>
+
+            <div class="bloco-pratica">
+                <div class="nome-exercicio" id="titulo-exercicio">Nome do Exercício</div>
+                <div class="contador-ex" id="contador-exercicio">Exercício 1 de 35</div>
+                
+                <div id="container-aviso-extra"></div>
+
+                <div style="font-size: 13px; color: #999; margin-top: 5px;">Tocar no saxofone a sequência:</div>
+                <div class="exercicio-completo-box" id="caixa-sequencia">Carregando...</div>
+                
+                <div class="controles-pratica">
+                    <button class="btn-acao" onclick="exercicioAnterior()">⬅ Anterior</button>
+                    <button class="btn-proximo" onclick="exercicioSeguinte()">Próximo Exercício ➔</button>
+                </div>
+            </div>
+
+            <div class="duvidas-box">
+                <h3>💬 Campo de Dúvidas</h3>
+                <div class="info-duvida">
+                    Ficou com alguma dúvida sobre os exercícios ou a digitação? Entre em contato pelo e-mail: <a href="mailto:spamricksax@gmail.com">spamricksax@gmail.com</a>
+                </div>
+            </div>
+
+            <div class="suporte-info">
+                Suporte técnico: <a href="mailto:spamricksax@gmail.com">spamricksax@gmail.com</a>
+            </div>
+            <div class="versao-rodape">Versão 0012026</div>
+        </div>
+
+        <!-- TELA DE MÚSICAS (REPERTÓRIO) -->
+        <div id="tela-musicas" class="tela">
+            <button class="btn-voltar" onclick="mudarTela('tela-inicial')">⬅ Voltar ao Início</button>
+            <div style="clear: both;"></div>
+
+            <!-- Seletor dos 12 Tons para o Módulo de Músicas -->
+            <div class="seletor-escalas-box" id="menu-tons-musicas"></div>
+
+            <div style="font-size: 15px; margin: 10px 0 15px 0; color: #aaa;">
+                Tonalidade da Música: <strong id="nome-tom-ativo-musica" style="color: #f1c40f;">Dó Maior (C)</strong>
+            </div>
+
+            <div class="aviso-metronomo">
+                🎶 <strong>Prática de Repertório:</strong> Pratique a melodia em todas as tonalidades usando o ciclo das quintas para destravar sua leitura e fluidez no instrumento!
+            </div>
+
+            <div class="bloco-pratica">
+                <div class="nome-exercicio" id="titulo-musica">Parabéns pra Você</div>
+                
+                <div style="font-size: 13px; color: #999; margin-top: 5px;">Melodia Transposta:</div>
+                <div class="exercicio-completo-box" id="caixa-sequencia-musica">Carregando...</div>
+            </div>
+
+            <div class="duvidas-box">
+                <h3>💬 Campo de Dúvidas sobre o Repertório</h3>
+                <div class="info-duvida">
+                    Dificuldade em transpor a música? Fale com o professor: <a href="mailto:spamricksax@gmail.com">spamricksax@gmail.com</a>
+                </div>
+            </div>
+
+            <div class="suporte-info">
+                Suporte técnico: <a href="mailto:spamricksax@gmail.com">spamricksax@gmail.com</a>
+            </div>
+            <div class="versao-rodape">Versão 0012026</div>
+        </div>
+
+    </div>
+
+    <script>
+        const escalasDados = {
+            'C':  { nome: 'Dó Maior (C)', notas: ['Dó', 'Ré', 'Mi', 'Fá', 'Sol', 'Lá', 'Si'] },
+            'G':  { nome: 'Sol Maior (G)', notas: ['Sol', 'Lá', 'Si', 'Dó', 'Ré', 'Mi', 'Fá#'] },
+            'D':  { nome: 'Ré Maior (D)', notas: ['Ré', 'Mi', 'Fá#', 'Sol', 'Lá', 'Si', 'Dó#'] },
+            'A':  { nome: 'Lá Maior (A)', notas: ['Lá', 'Si', 'Dó#', 'Ré', 'Mi', 'Fá#', 'Sol#'] },
+            'E':  { nome: 'Mi Maior (E)', notas: ['Mi', 'Fá#', 'Sol#', 'Lá', 'Si', 'Dó#', 'Ré#'] },
+            'B':  { nome: 'Si Maior (B)', notas: ['Si', 'Dó#', 'Ré#', 'Mi', 'Fá#', 'Sol#', 'Lá#'] },
+            'F#': { nome: 'Fá# Maior (F#)', notas: ['Fá#', 'Sol#', 'Lá#', 'Si', 'Dó#', 'Ré#', 'Mib'] },
+            'C#': { nome: 'Dó# Maior (C#)', notas: ['Dó#', 'Ré#', 'Mi#', 'Fá#', 'Sol#', 'Lá#', 'Si#'] },
+            'F':  { nome: 'Fá Maior (F)', notas: ['Fá', 'Sol', 'Lá', 'Sib', 'Dó', 'Ré', 'Mi'] },
+            'Bb': { nome: 'Sib Maior (Bb)', notas: ['Sib', 'Dó', 'Ré', 'Mib', 'Fá', 'Sol', 'Lá'] },
+            'Eb': { nome: 'Mib Maior (Eb)', notas: ['Mib', 'Fá', 'Sol', 'Lab', 'Sib', 'Dó', 'Ré'] },
+            'Ab': { nome: 'Lab Maior (Ab)', notas: ['Lab', 'Sib', 'Dó', 'Réb', 'Mib', 'Fá', 'Sol'] }
+        };
+
+        let tomAtualEscala = 'C';
+        let indiceEscala = 0;
+        let tomAtualMusica = 'C';
+
+        function mudarTela(idTela) {
+            document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+            document.getElementById(idTela).classList.add('ativa');
+            if (idTela === 'tela-escalas-maiores') {
+                montarMenuTons('menu-tons-escalas', 'escala');
+                atualizarTelaExercicio();
+            } else if (idTela === 'tela-musicas') {
+                montarMenuTons('menu-tons-musicas', 'musica');
+                atualizarTelaMusica();
+            }
+        }
+
+        function montarMenuTons(elementId, tipo) {
+            let menu = document.getElementById(elementId);
+            menu.innerHTML = "";
+            let tomAtivo = tipo === 'escala' ? tomAtualEscala : tomAtualMusica;
+
+            Object.keys(escalasDados).forEach(key => {
+                let tom = escalasDados[key];
+                let btn = document.createElement("button");
+                btn.className = `btn-escala ${key === tomAtivo ? 'ativo' : ''}`;
+                btn.innerText = tom.nome;
+                btn.onclick = () => {
+                    if (tipo === 'escala') {
+                        tomAtualEscala = key;
+                        document.getElementById("nome-tom-ativo-escala").innerText = tom.nome;
+                        montarMenuTons('menu-tons-escalas', 'escala');
+                        atualizarTelaExercicio();
+                    } else {
+                        tomAtualMusica = key;
+                        document.getElementById("nome-tom-ativo-musica").innerText = tom.nome;
+                        montarMenuTons('menu-tons-musicas', 'musica');
+                        atualizarTelaMusica();
+                    }
+                };
+                menu.appendChild(btn);
+            });
+        }
+
+        function gEscala(grau) {
+            let n = escalasDados[tomAtualEscala].notas;
+            if (grau >= 0 && grau <= 6) return n[grau];
+            if (grau >= 7 && grau <= 13) return n[grau - 7];
+            if (grau >= 14 && grau <= 20) return n[grau - 14];
+            return n[0];
+        }
+
+        function gMusica(grau) {
+            let n = escalasDados[tomAtualMusica].notas;
+            if (grau >= 0 && grau <= 6) return n[grau];
+            if (grau >= 7 && grau <= 13) return n[grau - 7];
+            if (grau >= 14 && grau <= 20) return n[grau - 14];
+            return n[0];
+        }
+
+        // 35 Exercícios de Escalas Maiores
+        function obterExerciciosDinamicos() {
+            return [
+                { id: 1, nome: "1. Escala", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(0)}` },
+                { id: 2, nome: "2. Segundas — ida e volta", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(6)} — ${gEscala(7)}<br><br>${gEscala(7)} — ${gEscala(6)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(1)} — ${gEscala(0)}` },
+                { id: 3, nome: "3. Terças ascendentes", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(7)}` },
+                { id: 4, nome: "4. Terças descendentes", seq: `${gEscala(7)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(0)}` },
+                { id: 5, nome: "5. Terça + retorno", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(0)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(5)} — ${gEscala(7)} — ${gEscala(6)} — ${gEscala(5)}` },
+                { id: 6, nome: "6. Terças em sequência", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(3)} &nbsp;|&nbsp; ${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(5)} &nbsp;|&nbsp; ${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(7)}` },
+                { id: 7, nome: "7. Quartas ascendentes", seq: `${gEscala(0)} — ${gEscala(3)} — ${gEscala(1)} — ${gEscala(4)} — ${gEscala(2)} — ${gEscala(5)} — ${gEscala(3)} — ${gEscala(6)} — ${gEscala(4)} — ${gEscala(7)}` },
+                { id: 8, nome: "8. Quartas descendentes", seq: `${gEscala(7)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(1)} — ${gEscala(3)} — ${gEscala(0)}` },
+                { id: 9, nome: "9. Quintas ascendentes", seq: `${gEscala(0)} — ${gEscala(4)} — ${gEscala(1)} — ${gEscala(5)} — ${gEscala(2)} — ${gEscala(6)} — ${gEscala(3)} — ${gEscala(7)}` },
+                { id: 10, nome: "10. Quintas descendentes", seq: `${gEscala(7)} — ${gEscala(3)} — ${gEscala(6)} — ${gEscala(2)} — ${gEscala(5)} — ${gEscala(1)} — ${gEscala(4)} — ${gEscala(0)}` },
+                { id: 11, nome: "11. Sextas ascendentes", seq: `${gEscala(0)} — ${gEscala(5)} — ${gEscala(1)} — ${gEscala(6)} — ${gEscala(2)} — ${gEscala(7)} — ${gEscala(3)} — ${gEscala(0)} — ...` },
+                { id: 12, nome: "12. Sétimas ascendentes", seq: `${gEscala(0)} — ${gEscala(6)} — ${gEscala(1)} — ${gEscala(7)} — ${gEscala(2)} — ${gEscala(1)} — ...` },
+                { 
+                    id: 13, 
+                    nome: "13. Oitavas", 
+                    seq: `${gEscala(0)} — <span style="color: #e74c3c;">${gEscala(0)}</span><br>${gEscala(1)} — <span style="color: #e74c3c;">${gEscala(1)}</span><br>${gEscala(2)} — <span style="color: #e74c3c;">${gEscala(2)}</span><br>${gEscala(3)} — <span style="color: #e74c3c;">${gEscala(3)}</span><br>${gEscala(4)} — <span style="color: #e74c3c;">${gEscala(4)}</span><br>${gEscala(5)} — <span style="color: #e74c3c;">${gEscala(5)}</span><br>${gEscala(6)} — <span style="color: #e74c3c;">${gEscala(6)}</span><br>${gEscala(7)} — <span style="color: #e74c3c;">${gEscala(7)}</span>`,
+                    avisoExtra: '🔴 <strong>Observação (Ex 13):</strong> A nota da esquerda é tocada normal (grave) e a nota da <strong>direita (em vermelho)</strong> deve ser tocada com a <strong>chave de oitavas apertada</strong>!'
+                },
+                { id: 14, nome: "14. Arpejo da Tônica", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(7)} — ${gEscala(4)} — ${gEscala(2)} — ${gEscala(0)}` },
+                { id: 15, nome: "15. Arpejos dos sete graus", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(7)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(1)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(2)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(7)} — ${gEscala(3)}<br>${gEscala(4)} — ${gEscala(6)} — ${gEscala(1)} — ${gEscala(4)}<br>${gEscala(5)} — ${gEscala(7)} — ${gEscala(2)} — ${gEscala(5)}<br>${gEscala(6)} — ${gEscala(1)} — ${gEscala(3)} — ${gEscala(6)}` },
+                { id: 16, nome: "16. Padrão 1–2–3–5", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(4)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(5)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(6)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(7)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(1)}<br>${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(2)}<br>${gEscala(6)} — ${gEscala(7)} — ${gEscala(1)} — ${gEscala(3)}` },
+                { id: 17, nome: "17. Padrão 1–3–2–4", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(3)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(4)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(5)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(6)}<br>${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(7)}<br>${gEscala(5)} — ${gEscala(7)} — ${gEscala(6)} — ${gEscala(1)}<br>${gEscala(6)} — ${gEscala(1)} — ${gEscala(7)} — ${gEscala(2)}` },
+                { id: 18, nome: "18. Três para frente, um para trás", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(1)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(5)}<br>${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(6)}` },
+                { id: 19, nome: "19. Quatro para frente, dois para trás", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(1)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(2)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(3)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(4)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(5)}<br>${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(1)} — ${gEscala(6)}` },
+                { id: 20, nome: "20. Padrão quebrado de seis notas", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(6)} — ${gEscala(5)}` },
+                { id: 21, nome: "21. Três notas (Subindo e Descendente)", seq: `<strong>Subindo:</strong><br>${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} &nbsp;|&nbsp; ${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} &nbsp;|&nbsp; ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} &nbsp;|&nbsp; ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} &nbsp;|&nbsp; ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} &nbsp;|&nbsp; ${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)}<br><br><strong>Descendente:</strong><br>${gEscala(7)} — ${gEscala(6)} — ${gEscala(5)} &nbsp;|&nbsp; ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)} &nbsp;|&nbsp; ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)} &nbsp;|&nbsp; ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)} &nbsp;|&nbsp; ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)} &nbsp;|&nbsp; ${gEscala(2)} — ${gEscala(1)} — ${gEscala(0)}` },
+                { id: 22, nome: "22. Três notas + salto (Frase de improviso)", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(4)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(5)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(6)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(7)}` },
+                { id: 23, nome: "23. Padrão 1–2–3–2", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(1)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(5)}<br>${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(6)}` },
+                { id: 24, nome: "24. Padrão 1–3–4–3", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(5)}` },
+                { id: 25, nome: "25. Padrão 1–3–5 (Arpejos na escala)", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(4)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(5)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(6)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(7)}<br>${gEscala(4)} — ${gEscala(6)} — ${gEscala(1)}<br>${gEscala(5)} — ${gEscala(7)} — ${gEscala(2)}<br>${gEscala(6)} — ${gEscala(1)} — ${gEscala(3)}` },
+                { id: 26, nome: "26. Padrão 1–5–3–2", seq: `${gEscala(0)} — ${gEscala(4)} — ${gEscala(2)} — ${gEscala(1)}<br>${gEscala(1)} — ${gEscala(5)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(2)} — ${gEscala(6)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(3)} — ${gEscala(7)} — ${gEscala(5)} — ${gEscala(4)}` },
+                { id: 27, nome: "27. Salto de terça + movimento conjunto", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)}` },
+                { id: 28, nome: "28. Padrão Zigue-Zague (Pula uma e volta uma)", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(5)}<br><br>${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(7)} — ${gEscala(6)} — ${gEscala(1)} — ${gEscala(7)}` },
+                { id: 29, nome: "29. Quatro notas em sequência", seq: `<strong>Subindo:</strong><br>${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} &nbsp;|&nbsp; ${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} &nbsp;|&nbsp; ${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} &nbsp;|&nbsp; ${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} &nbsp;|&nbsp; ${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)}<br><br><strong>Descendente:</strong><br>${gEscala(7)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)} &nbsp;|&nbsp; ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)} &nbsp;|&nbsp; ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)} &nbsp;|&nbsp; ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)} &nbsp;|&nbsp; ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(0)}` },
+                { id: 30, nome: "30. Quatro notas quebradas (Fluência de dedos)", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(3)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(4)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(5)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(6)}` },
+                { id: 31, nome: "31. Padrão 1–2–4–3", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)}` },
+                { id: 32, nome: "32. Padrão 1–3–5–4 (Melodia e Acorde)", seq: `${gEscala(0)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(1)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(2)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(5)}<br>${gEscala(3)} — ${gEscala(5)} — ${gEscala(7)} — ${gEscala(6)}` },
+                { id: 33, nome: "33. Vai e volta estendido", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(1)} — ${gEscala(0)}<br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(2)} — ${gEscala(1)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(6)} — ${gEscala(5)}` },
+                { id: 34, nome: "34. Padrão de Pergunta e Resposta", seq: `<strong>Pergunta:</strong> ${gEscala(0)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(2)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Resposta:</strong> ${gEscala(1)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(3)}<br><br><strong>Pergunta:</strong> ${gEscala(2)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(4)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Resposta:</strong> ${gEscala(3)} — ${gEscala(5)} — ${gEscala(7)} — ${gEscala(5)}` },
+                { id: 35, nome: "35. Célula para Improvisação", seq: `${gEscala(0)} — ${gEscala(1)} — ${gEscala(2)} — ${gEscala(4)} — ${gEscala(2)} — ${gEscala(1)}<br><br><strong>Deslocada nos graus:</strong><br>${gEscala(1)} — ${gEscala(2)} — ${gEscala(3)} — ${gEscala(5)} — ${gEscala(3)} — ${gEscala(2)}<br>${gEscala(2)} — ${gEscala(3)} — ${gEscala(4)} — ${gEscala(6)} — ${gEscala(4)} — ${gEscala(3)}<br>${gEscala(3)} — ${gEscala(4)} — ${gEscala(5)} — ${gEscala(7)} — ${gEscala(5)} — ${gEscala(4)}<br>${gEscala(4)} — ${gEscala(5)} — ${gEscala(6)} — ${gEscala(1)} — ${gEscala(6)} — ${gEscala(5)}<br>${gEscala(5)} — ${gEscala(6)} — ${gEscala(7)} — ${gEscala(2)} — ${gEscala(7)} — ${gEscala(6)}<br>${gEscala(6)} — ${gEscala(7)} — ${gEscala(1)} — ${gEscala(3)} — ${gEscala(1)} — ${gEscala(7)}` }
+            ];
+        }
+
+        // Módulo de Músicas (Apenas o Parabéns pra Você transponível)
+        function obterMusicasDinamicas() {
+            return [
+                { 
+                    id: 1, 
+                    nome: "Parabéns pra Você", 
+                    seq: `<strong>Nesta data querida:</strong><br>${gMusica(4)} — ${gMusica(4)} — ${gMusica(5)} — ${gMusica(4)} — ${gMusica(0)} — ${gMusica(6)}<br><br><strong>Muitas felicidades:</strong><br>${gMusica(4)} — ${gMusica(4)} — ${gMusica(5)} — ${gMusica(4)} — ${gMusica(1)} — ${gMusica(0)} — ${gMusica(0)}<br><br><strong>Muitos anos de vida:</strong><br>${gMusica(2)} — ${gMusica(2)} — ${gMusica(4)} — ${gMusica(2)} — ${gMusica(0)} — ${gMusica(6)} — ${gMusica(5)}<br><br><strong>Finalização:</strong><br>${gMusica(3)} — ${gMusica(3)} — ${gMusica(2)} — ${gMusica(0)} — ${gMusica(1)} — ${gMusica(0)} — ${gMusica(0)}` 
+                }
+            ];
+        }
+
+        function montarMenuMiniEscalas() {
+            let exerciciosAtuais = obterExerciciosDinamicos();
+            let menu = document.getElementById("menu-mini-exercicios");
+            menu.innerHTML = "";
+            exerciciosAtuais.forEach((ex, idx) => {
+                let btn = document.createElement("button");
+                btn.className = `btn-mini ${idx === indiceEscala ? 'ativo' : ''}`;
+                btn.innerText = `Ex ${ex.id}`;
+                btn.onclick = () => { indiceEscala = idx; atualizarTelaExercicio(); };
+                menu.appendChild(btn);
+            });
+        }
+
+        function atualizarTelaExercicio() {
+            let exerciciosAtuais = obterExerciciosDinamicos();
+            if (indiceEscala >= exerciciosAtuais.length) indiceEscala = 0;
+            let ex = exerciciosAtuais[indiceEscala];
+            
+            document.getElementById("titulo-exercicio").innerText = ex.nome;
+            document.getElementById("contador-exercicio").innerText = `Exercício ${indiceEscala + 1} de ${exerciciosAtuais.length}`;
+            document.getElementById("caixa-sequencia").innerHTML = ex.seq;
+
+            let containerAviso = document.getElementById("container-aviso-extra");
+            containerAviso.innerHTML = ex.avisoExtra ? `<div class="aviso-oitava-ex13">${ex.avisoExtra}</div>` : "";
+            montarMenuMiniEscalas();
+        }
+
+        function exercicioSeguinte() {
+            let exerciciosAtuais = obterExerciciosDinamicos();
+            indiceEscala = (indiceEscala + 1) % exerciciosAtuais.length;
+            atualizarTelaExercicio();
+        }
+
+        function exercicioAnterior() {
+            let exerciciosAtuais = obterExerciciosDinamicos();
+            indiceEscala = (indiceEscala - 1 + exerciciosAtuais.length) % exerciciosAtuais.length;
+            atualizarTelaExercicio();
+        }
+
+        function atualizarTelaMusica() {
+            let musicasAtuais = obterMusicasDinamicas();
+            let mus = musicasAtuais[0];
+            
+            document.getElementById("titulo-musica").innerText = mus.nome;
+            document.getElementById("caixa-sequencia-musica").innerHTML = mus.seq;
+        }
+
+        // --- SCRIPT DE PROTEÇÃO DO CÓDIGO E CONTEÚDO ---
+        // 1. Bloquear Clique do Botão Direito
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Bloquear Atalhos de Teclado (F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, etc.)
+        document.addEventListener('keydown', event => {
+            if (
+                event.keyCode === 123 || // F12
+                (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || // Ctrl+Shift+I / J
+                (event.ctrlKey && event.keyCode === 85) || // Ctrl+U (Exibir Código Fonte)
+                (event.ctrlKey && event.keyCode === 83)    // Ctrl+S (Salvar Página)
+            ) {
+                event.preventDefault();
+                alert("🔒 Conteúdo protegido pelo autor — Rick Sax 🎷");
+                return false;
+            }
+        });
+    </script>
+
+</body>
+</html>
